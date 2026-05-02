@@ -86,6 +86,8 @@ export async function createDoctor(req, res) {
             imagePublicId = uploaded?.public_id || uploaded?.publicId || imagePublicId;
         }
 
+        const schedule = parseScheduleInput(body.schedule);
+        
         const doc = new Doctor({
             email: emailLC,
             password: body.password,
