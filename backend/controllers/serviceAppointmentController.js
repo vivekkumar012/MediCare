@@ -407,9 +407,114 @@ export const updateServiceAppointment = async (req, res) => {
                 if (updates.payment.paidAt === undefined) updates.payment.paidAt = new Date();
             }
         }
-        
-        const updated = await ServiceAppointment.findByIdAndUpdate()
-    } catch (error) {
 
+        const updated = await ServiceAppointment.findByIdAndUpdate(id, { $set: updates }, {
+            new: true, runValidators: true
+        });
+
+        if (!updated) {
+            return res.status(404).json({
+                success: false,
+                message: "Not Found"
+            })
+        }
+
+        return res.json({
+            success: true,
+            data: updated
+        })
+    } catch (err) {
+        console.error("updateServiceAppointment error:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
     }
+}
+
+//to cancel the service Appointment
+export const cancelServiceAppointment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const appt = await ServiceAppointment.findById(id);
+        if (!appt) return res.status(404).json({ success: false, message: "Not found" });
+        if (appt.status === "Completed") return res.status(400).json({ success: false, message: "Cannot cancel a completed appointment" });
+
+        appt.status = "Canceled";
+        if (appt.payment) appt.payment.status = appt.payment.status === "Confirmed" ? "Canceled" : "Pending";
+        await appt.save();
+        return res.json({
+            success: true,
+            data: appt
+        })
+    } catch (err) {
+        console.error("cancelServiceAppointment error:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+//to get the statistics
+export const getServiceAppointmentStats = async (req, res) => {
+    try {
+        const services = await ServiceAppointment.aggregate([
+            {
+                $lookup: { from: "serviceappointments", localField: "_id", foreignField: "serviceId", as: "appointments" },
+            },
+            {
+                $addFields: {
+                    totalAppointments: { $size: "$appointments" },
+                    completed: { $size: { $filter: { input: "$appointments", as: "a", cond: { $eq: ["$$a.status", "Completed"] } } } },
+                    canceled: { $size: { $filter: { input: "$appointments", as: "a", cond: { $eq: ["$$a.status", "Canceled"] } } } },
+                },
+            },
+            { $addFields: { earning: { $multiply: ["$completed", "$price"] } } },
+            { $project: { name: 1, price: 1, image: "$imageUrl", totalAppointments: 1, completed: 1, canceled: 1, earning: 1 } },
+            { $sort: { createdAt: -1 } },
+        ]);
+
+        return res.json({
+            success: true,
+            services,
+            totalServices: services.length
+        })
+    } catch (err) {
+        console.error("getServiceAppointmentStats error:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+//to get appointment for the patient
+export const getServiceAppointmentsByPatient = async (req, res) => {
+    try {
+        const clerkUserId = resolveClerkUserId(req);
+        const { createdBy, mobile } = req.query;
+        const resolvedCreatedBy = createdBy || clerkUserId || null;
+        if (!resolvedCreatedBy && !mobile) {
+            return res.json({
+                success: true,
+                data: []
+            })
+        }
+
+        const filter = {};
+        if (resolvedCreatedBy) filter.createdby = resolvedCreatedBy;
+        if (mobile) filter.mobile = mobile;
+
+        const list = await ServiceAppointment.find(filter).sort({ createdAt: -1 }).lean();
+        return res.json({
+            success: true,
+            data: list
+        })
+    } catch (err) {
+        console.error("getServiceAppointmentsByPatient error:", err);
+        return res.status(500).json({ success: false, message: "Server error" });
+    }
+}
+
+export default {
+    createServiceAppointment,
+    confirmServicePayment,
+    getServiceAppointments,
+    getServiceAppointmentById,
+    updateServiceAppointment,
+    cancelServiceAppointment,
+    getServiceAppointmentStats,
+    getServiceAppointmentsByPatient
 }
