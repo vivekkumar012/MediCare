@@ -2,7 +2,9 @@ import React from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import Hero from "./pages/Hero";
 import { useUser } from "@clerk/react";
-import { Home } from "lucide-react";
+import Add from "./pages/Add";
+import Home from "./pages/Home";
+import List from "./pages/List";
 
 function RequireAuth({ children }) {
   const { isLoaded, isSignedIn } = useUser();
@@ -44,6 +46,8 @@ const App = () => {
           </RequireAuth>
         }
       />
+      <Route path="/add" element={<RequireAuth><Add /></RequireAuth>} />
+      <Route path="/list" element={<RequireAuth><List /></RequireAuth>} />
     </Routes>
   );
 };
