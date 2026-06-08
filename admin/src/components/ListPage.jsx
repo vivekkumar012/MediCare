@@ -290,7 +290,7 @@ const ListPage = () => {
             <article key={id} className={doctorListStyles.article}>
               <div className={doctorListStyles.articleContent}>
                 <img
-                  src={doc.imgageUrl || doc.image || ""}
+                  src={doc.imageUrl || doc.image || ""}
                   alt={doc.name}
                   className={doctorListStyles.doctorImage}
                 />
@@ -390,7 +390,7 @@ const ListPage = () => {
                           Schedule
                         </div>
                         <div className="mt-2 flex flex-wrap gap-2">
-                          {sortedDates.map((date) => {
+                          {storedDates.map((date) => {
                             const slots = scheduleMap[date] || [];
                             return (
                               <div key={date} className="min-w-full md:min-w-0">
