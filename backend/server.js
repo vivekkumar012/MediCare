@@ -18,6 +18,8 @@ const allowedOrigins = [
     "http://localhost:3001",    // ← Docker admin
     "http://frontend:80",       // ← Docker internal
     "http://admin:80",          // ← Docker internal
+    "https://medicare-admin-six.vercel.app/",
+    "https://medi-care-sage.vercel.app/"
 ]
 
 //Middlewares
