@@ -12,7 +12,7 @@ import {
   CheckCircle
 } from "lucide-react";
 
-const API_BASE = "http://localhost:4000";
+const API_BASE = "https://medicare-backend-wgf4.onrender.com";
 //HELPERS Functions
 function formatTwo(n) {
   return String(n).padStart(2, "0");

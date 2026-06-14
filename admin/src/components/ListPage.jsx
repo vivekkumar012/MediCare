@@ -83,7 +83,7 @@ function getSortedScheduleDates(scheduleLike) {
 }
 
 const ListPage = () => {
-  const API_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+  const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://medicare-backend-wgf4.onrender.com";
 
   const [doctors, setDoctors] = useState([]);
   const [expanded, setExpanded] = useState(null);

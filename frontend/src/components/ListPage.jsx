@@ -299,7 +299,7 @@ function RescheduleButton({ appointment, onReschedule }) {
 }
 
 const ListPage = () => {
-  const API_BASE = "http://localhost:4000";
+  const API_BASE = "https://medicare-backend-wgf4.onrender.com";
   const [appointments, setAppointments] = useState([]);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");

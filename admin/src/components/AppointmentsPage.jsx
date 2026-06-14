@@ -6,7 +6,7 @@ import {
 } from "../assets/dummyStyles";
 import { BadgeIndianRupee, Calendar, Search } from "lucide-react";
 
-const API_BASE = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_BACKEND_URL || "https://medicare-backend-wgf4.onrender.com";
 
 //HELPER FUNCTIONS
 //this function converts ISO date string to "DD MMM YYYY" format, e.g. "2024-06-15" -> "15 Jun 2024"
