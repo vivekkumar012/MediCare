@@ -1,223 +1,426 @@
-# 🏥 MediCare — Healthcare Appointment Platform
+# 🏥 Medicare HMS
 
-A full-stack MERN healthcare management system with dual frontend portals — one for **patients & doctors** and one for **admins**. Built with React, Node.js, Express, MongoDB, Clerk Auth, Stripe Payments, and Cloudinary.
-
----
-
-## 🚀 Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React + Vite (x2 portals) |
-| Backend | Node.js + Express.js |
-| Database | MongoDB + Mongoose |
-| Auth | Clerk (patients/users) + JWT (doctors) |
-| Payments | Stripe Checkout |
-| Storage | Cloudinary (images) |
+A production-grade Healthcare Management System built with the MERN Stack that streamlines hospital operations through dedicated Patient, Doctor, and Admin portals.
 
 ---
 
-## 📁 Project Structure
+## 🚀 Overview
 
-```
-medicare/
-├── backend/                  # Express API server (port 4000)
-│   ├── config/db.js
-│   ├── controllers/
-│   │   ├── appointmentController.js
-│   │   ├── doctorController.js
-│   │   ├── serviceController.js
-│   │   └── serviceAppointmentController.js
-│   ├── middlewares/doctorAuth.js
-│   ├── models/
-│   │   ├── Appointment.js
-│   │   ├── Doctor.js
-│   │   ├── Service.js
-│   │   └── ServiceAppointment.js
-│   ├── routes/
-│   │   ├── appointmentRouter.js
-│   │   ├── doctorRouter.js
-│   │   ├── serviceRouter.js
-│   │   └── serviceAppointmentRouter.js
-│   └── utils/cloudinary.js
+Medicare HMS is a full-stack healthcare platform designed to automate and simplify real-world hospital workflows.
+
+The system supports three distinct roles:
+
+* 👤 Patients
+* 👨‍⚕️ Doctors
+* 🛡️ Administrators
+
+Patients can book appointments and healthcare services, doctors can manage schedules and appointments, and administrators can oversee the entire healthcare ecosystem through a centralized dashboard.
+
+The backend is designed with scalability in mind using MongoDB indexing, aggregation pipelines, pagination, modular architecture, and production-ready REST APIs.
+
+---
+
+## 🌐 Live Demo
+
+| Platform | URL |
+|-----------|-----|
+| Patient Portal | https://medi-care-sage.vercel.app/ |
+| Admin Dashboard | https://medicare-admin-six.vercel.app/ |
+
+### Test Credentials
+
+Doctors can log in using credentials created by the Administrator.
+
+For demo access, contact the repository owner.
+
+# ✨ Features
+
+## 👤 Patient Portal
+
+### Authentication
+
+* Clerk Authentication
+* Secure Session Management
+* Protected Routes
+
+### Functionalities
+
+* Browse doctors
+* View doctor profiles
+* Book appointments
+* View booked appointments
+* Browse healthcare services
+* Responsive user experience
+
+---
+
+## 👨‍⚕️ Doctor Portal
+
+### Authentication
+
+* Admin-created doctor accounts
+* Email & Password login
+* JWT-based authentication
+* Protected doctor routes
+
+### Functionalities
+
+* Manage doctor profile
+* Add appointment slots
+* Manage availability
+* View all appointments
+* Reschedule appointments
+* Track appointment status
+
+### Doctor Analytics Dashboard
+
+* Total Earnings
+* Total Appointments
+* Completed Appointments
+* Cancelled Appointments
+* Performance Insights
+
+---
+
+## 🛡️ Admin Portal
+
+### Authentication
+
+* Clerk Authentication
+* Role-based authorization
+
+### Functionalities
+
+* Add new doctors
+* Manage doctors
+* Manage healthcare services
+* Monitor appointments
+* View patient statistics
+* Manage hospital operations
+
+### Admin Analytics Dashboard
+
+* Total Revenue
+* Total Patients
+* Total Doctors
+* Appointment Statistics
+* Service Insights
+
+---
+
+# 🏗️ System Architecture
+
+Patients Frontend (React)
 │
-├── frontend/                 # Patient & Doctor portal (port 5173)
-└── admin/                    # Admin panel (port 5174)
-```
+▼
+REST APIs
+│
+▼
+Node.js + Express.js
+│
+▼
+MongoDB
+
+Doctors Frontend ─────┘
+Admin Frontend ───────┘
 
 ---
 
-## ⚙️ Environment Variables
+# 🛠️ Tech Stack
 
-Create a `.env` file in `/backend`:
+## Frontend
 
-```env
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-CLERK_SECRET_KEY=your_clerk_secret_key
-STRIPE_SECRET_KEY=your_stripe_secret_key
-FRONTEND_URL=http://localhost:5173
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-MAJOR_ADMIN_ID=your_admin_clerk_user_id
-```
+* React.js
+* React Router DOM
+* Axios
+* Tailwind CSS
+* Context API
 
----
+## Backend
 
-## 🔑 Authentication
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
 
-- **Patients/Users** — Clerk-based authentication via `@clerk/express`
-- **Doctors** — Custom JWT authentication (`Authorization: Bearer <token>`)
-- **Admin** — Clerk-based authentication (separate portal)
+## Authentication
 
----
+### Patients & Admins
 
-## 📡 API Endpoints
+* Clerk Authentication
+* Session Management
 
-### Doctors `/api/doctors`
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/` | None | List all doctors |
-| GET | `/:id` | None | Get doctor by ID |
-| POST | `/` | None | Create doctor (signup) |
-| POST | `/login` | None | Doctor login → JWT |
-| PUT | `/:id` | Doctor JWT | Update profile |
-| POST | `/:id/toggle-availability` | Doctor JWT | Toggle availability |
-| DELETE | `/:id` | None | Delete doctor |
+### Doctors
 
-### Appointments `/api/appointments`
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/` | None | List appointments (filterable) |
-| POST | `/` | Clerk | Book appointment |
-| GET | `/me` | Clerk | Patient's appointments |
-| GET | `/confirm?session_id=` | None | Confirm Stripe payment |
-| GET | `/stats/summary` | None | Admin stats |
-| GET | `/doctor/:doctorId` | None | Doctor's appointments |
-| PUT | `/:id` | None | Update appointment |
-| GET | `/patients/count` | None | Registered user count |
+* JWT Authentication
+* bcrypt Password Hashing
 
-### Services `/api/services`
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/` | None | List all services |
-| GET | `/:id` | None | Get service by ID |
-| POST | `/` | None | Create service (admin) |
-| PUT | `/:id` | None | Update service |
-| DELETE | `/` | None | Delete service |
+## Database
 
-### Service Appointments `/api/service-appointment`
-| Method | Route | Auth | Description |
-|--------|-------|------|-------------|
-| GET | `/` | None | List service appointments |
-| POST | `/` | Clerk | Book service appointment |
-| GET | `/me` | Clerk | Patient's service appointments |
-| GET | `/confirm?session_id=` | None | Confirm payment |
-| GET | `/stats/summary` | None | Stats |
-| PUT | `/:id` | None | Update |
-| POST | `/:id/cancel` | None | Cancel |
+* MongoDB Atlas
+
+## Deployment
+
+* Vercel
+* Render / Railway (Backend)
 
 ---
 
-## 💳 Payment Flow (Stripe)
+# 📊 Core Modules
 
-1. Patient books appointment → backend creates Stripe Checkout Session
-2. Patient redirected to Stripe → pays
-3. Stripe redirects to `/appointment/success?session_id=`
-4. Frontend calls `/api/appointments/confirm?session_id=` → status set to `Confirmed`
+## Appointment Management
 
-**Free appointments** are confirmed immediately. **Cash appointments** remain `Pending` until manually confirmed.
+* Appointment Booking
+* Appointment Cancellation
+* Appointment Rescheduling
+* Slot Management
+* Appointment Status Tracking
+
+## Doctor Management
+
+* Doctor Onboarding
+* Doctor Authentication
+* Profile Management
+* Availability Management
+* Earnings Tracking
+* Performance Analytics
+
+## Service Management
+
+* Add Healthcare Services
+* Update Services
+* Delete Services
+* Service Availability Controls
+
+## Analytics Engine
+
+* Revenue Analytics
+* Doctor Earnings Analytics
+* Appointment Analytics
+* Patient Growth Analytics
+* Hospital Performance Insights
+
+## 💳 Payment Management
+
+Patients can pay for appointments using multiple payment methods.
+
+### Supported Payment Methods
+
+- Stripe Payment Gateway
+- Cash on Appointment
+
+### Features
+
+- Secure Stripe Checkout Integration
+- Online Appointment Payments
+- Cash Payment Support
+- Payment Status Tracking
+- Payment Verification
+- Booking Confirmation after Successful Payment
 
 ---
 
-## 🖼️ Image Uploads
+# ⚡ Performance Optimizations
 
-Doctor and service images are uploaded via `multer` (temp `/tmp`) then pushed to **Cloudinary**. Old images are deleted from Cloudinary on update.
+## MongoDB Indexing
+
+Implemented indexes on frequently queried fields:
+
+* doctorId
+* userId
+* appointmentDate
+* status
+* createdAt
+
+### Benefits
+
+* Faster database lookups
+* Reduced query execution time
+* Improved dashboard performance
 
 ---
 
-## 🛠️ Local Setup
+## Aggregation Pipelines
+
+Used MongoDB Aggregation Framework for:
+
+* Revenue calculations
+* Doctor earnings reports
+* Appointment statistics
+* Analytics dashboards
+* Service performance metrics
+
+### Benefits
+
+* Reduced server-side computation
+* Faster analytics generation
+* Efficient reporting
+
+---
+
+## Server-Side Pagination
+
+Implemented pagination for:
+
+* Doctors Listing
+* Appointments Listing
+* Services Listing
+* Patient Records
+
+### Benefits
+
+* Better scalability
+* Reduced payload size
+* Improved user experience
+
+---
+
+# 🔐 Security Features
+
+* Clerk Authentication
+* JWT Authentication
+* bcrypt Password Hashing
+* Role-Based Access Control (RBAC)
+* Protected API Routes
+* Input Validation
+* Error Handling Middleware
+* Secure Environment Variables
+
+---
+
+# 🌐 REST API Highlights
+
+## Authentication APIs
+
+* User Login/Register
+* Admin Authentication
+* Doctor Login
+* Token Verification
+
+## Doctor APIs
+
+* Add Doctor
+* Update Doctor Profile
+* Add Slots
+* Manage Availability
+* Doctor Analytics
+
+## Appointment APIs
+
+* Create Appointment
+* Get Appointments
+* Cancel Appointment
+* Reschedule Appointment
+* Appointment Status Updates
+
+## Service APIs
+
+* Create Service
+* Update Service
+* Delete Service
+* Get Services
+
+## Admin APIs
+
+* Dashboard Analytics
+* Doctor Management
+* Appointment Monitoring
+* Revenue Reports
+
+---
+
+# 📈 Analytics
+
+## Doctor Dashboard
+
+Provides real-time insights including:
+
+* Total Earnings
+* Completed Appointments
+* Cancelled Appointments
+* Total Bookings
+* Patient Engagement Metrics
+
+## Admin Dashboard
+
+Provides hospital-wide analytics including:
+
+* Total Revenue
+* Total Doctors
+* Total Patients
+* Appointment Metrics
+* Service Utilization Insights
+
+---
+
+# 📂 Folder Structure
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/your-username/medicare.git
-cd medicare/backend && npm install
-cd ../frontend && npm install
-cd ../admin && npm install
+client/
+├── src/
+├── components/
+├── pages/
+├── context/
+└── services/
 
-# 2. Configure .env in /backend
+admin/
+├── src/
+├── pages/
+├── components/
+└── services/
 
-# 3. Run all three
-# Terminal 1 — Backend
-cd backend && npm run dev
-
-# Terminal 2 — Frontend
-cd frontend && npm run dev      # http://localhost:5173
-
-# Terminal 3 — Admin
-cd admin && npm run dev         # http://localhost:5174
+backend/
+├── controllers/
+├── routes/
+├── models/
+├── middlewares/
+├── utils/
+└── config/
 ```
 
----
+# 🎯 Key Highlights
 
-## 🌐 Deployment Notes
+✅ Multi-Role Healthcare Platform
 
-- Set `FRONTEND_URL` env var on the backend to your production frontend URL
-- CORS is configured to allow both portals; update `allowedOrigins` for production domains
-- Stripe webhook configuration recommended for production payment reliability
+✅ Separate Patient, Doctor & Admin Workflows
 
----
+✅ Clerk Authentication for Users & Admins
 
-## 📄 License
+✅ JWT Authentication for Doctors
 
-MIT
----
+✅ Appointment Booking & Rescheduling
 
-## 🚀 Future Enhancements
+✅ Doctor Slot Management
 
-* 📱 Mobile application support
-* 🔔 Real-time appointment notifications
-* 📊 Advanced analytics dashboard
-* 🎥 Video consultation integration
-* 📅 Google Calendar synchronization
-* 🧾 Automated invoice generation
+✅ Service Management System
 
----
+✅ Revenue & Performance Analytics
 
-## 🤝 Contributing
+✅ MongoDB Aggregation Pipelines
 
-Contributions, issues, and feature requests are welcome!
+✅ Database Indexing
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to your branch
-5. Open a Pull Request
+✅ Server-Side Pagination
+
+✅ Production-Ready REST APIs
+
+✅ Scalable Backend Architecture
 
 ---
 
-### 💙 Built to simplify healthcare management
+# 🔮 Future Improvements
 
-**MediCare** connects patients, doctors, and administrators through a modern, secure, and scalable healthcare ecosystem.
+* Video Consultations
+* Medical Records Management
+* Prescription Management
+* Email Notifications
+* SMS Notifications
+* AI-Based Appointment Recommendations
 
-⭐ If you found this project useful, consider giving it a star.
+---
 
-<br>
+# 👨‍💻 Author
 
-### ✨ Crafted with passion by Vivek ✨
+Built with ❤️ By Vivek.
 
-```text
-██╗   ██╗██╗██╗   ██╗███████╗██╗  ██╗
-██║   ██║██║██║   ██║██╔════╝██║ ██╔╝
-██║   ██║██║██║   ██║█████╗  █████╔╝
-╚██╗ ██╔╝██║╚██╗ ██╔╝██╔══╝  ██╔═██╗
- ╚████╔╝ ██║ ╚████╔╝ ███████╗██║  ██╗
-  ╚═══╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝
-```
-
-### 🚀 Made by Vivek
-
-*Turning ideas into impactful digital experiences.*
-
-</div>
+If you found this project useful, consider giving it a ⭐ on GitHub.
