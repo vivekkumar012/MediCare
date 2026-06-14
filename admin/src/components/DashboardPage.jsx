@@ -402,7 +402,7 @@ function StatCard({ icon, label, value }) {
         <div className={s.statIconContainer}>{icon}</div>
         <div className="flex-1">
           <div className={s.statLabel}>{label}</div>
-          <div className={s.statValue}>{s.statValue}</div>
+          <div className={s.statValue}>{value}</div>
         </div>
       </div>
     </div>

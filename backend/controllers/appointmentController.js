@@ -65,7 +65,7 @@ export const getAppointments = async (req, res) => {
         const total = await Appointment.countDocuments(filter);
         return res.json({
             success: true,
-            Appointment: items,
+            appointments: items,
             meta: { page, limit, total, count: items.length }
         })
     } catch (error) {
@@ -79,9 +79,10 @@ export const getAppointments = async (req, res) => {
 
 export const getAppointmentsByPatient = async (req, res) => {
     try {
-        const queryCreatedBy = req.query.createdBy || null;
-        const clerkUserId = req.auth?.userId || null;
-        const resolvedCreatedBy = queryCreatedBy || clerkUserId || null;
+        //const queryCreatedBy = req.query.createdBy || null;
+        // const clerkUserId = req.auth?.userId || null;
+        const {userId} = getAuth(req);
+        const resolvedCreatedBy = req.query.createdBy || userId || null;
         console.log(`resolvedCreatedBy (query or req.auth.userId):`, resolvedCreatedBy);
 
         if (!resolvedCreatedBy && !req.query.mobile) {
@@ -536,11 +537,11 @@ export const getAppointmentsByDoctor = async (req, res) => {
             filter.$or = [{ patientName: re }, { mobile: re }, { notes: re }];
         }
 
-        const items = await Appointment.find(filter).sort({ data: 1, time: 1 }).skip(skip).limit(limit).populate("DoctorId", "name specialization owner imageUrl image").lean();
+        const items = await Appointment.find(filter).sort({ date: 1, time: 1 }).skip(skip).limit(limit).populate("doctorId", "name specialization owner imageUrl image").lean();
         const total = await Appointment.countDocuments(filter);
         return res.json({
             success: true,
-            appointment: items,
+            appointments: items,
             meta: { page, limit, total, count: items.length }
         })
     } catch (error) {

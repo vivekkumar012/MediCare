@@ -521,7 +521,7 @@ const ListPage = () => {
                   <div className={listPageStyles.cardAvatar}>
                     {a.doctorImage ? (
                       <img
-                        src={a.doctor.Image}
+                        src={a.doctorImage}
                         alt={a.doctorName}
                         className={listPageStyles.cardAvatarImage}
                         onError={(e) =>

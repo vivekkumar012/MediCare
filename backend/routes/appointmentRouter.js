@@ -1,5 +1,5 @@
 import express from "express"
-import { clerkMiddleware, requireAuth } from "@clerk/express"
+import { clerkMiddleware, getAuth } from "@clerk/express"
 import { cancelAppointment, confirmPayment, createAppointment, getAppointments, getAppointmentsByDoctor, getAppointmentsByPatient, getRegisteredUserCount, getStats, updateAppointment } from "../controllers/appointmentController.js";
 
 
@@ -9,8 +9,8 @@ appointmentRouter.get("/", getAppointments);
 appointmentRouter.get("/confirm", confirmPayment);
 appointmentRouter.get("/stats/summary", getStats);
 
-appointmentRouter.post("/", clerkMiddleware(), requireAuth(), createAppointment);
-appointmentRouter.get("/me", clerkMiddleware(), requireAuth(), getAppointmentsByPatient);
+appointmentRouter.post("/", clerkMiddleware(), createAppointment);
+appointmentRouter.get("/me", clerkMiddleware(), getAppointmentsByPatient);
 
 appointmentRouter.get("/doctor/:doctorId", getAppointmentsByDoctor);
 

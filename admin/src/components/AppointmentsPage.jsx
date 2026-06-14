@@ -57,10 +57,8 @@ const AppointmentsPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const q = query.trim();
-        const url = `${API_BASE}/api/appointments?limit=200${
-          q ? `&search=${encodeURIComponent(q)}` : ""
-        }`;
+        //const q = query.trim();
+        const url = `${API_BASE}/api/appointments?limit=200`;
         const res = await fetch(url);
         if (!res.ok) {
           const body = await res.json().catch(() => ({}));
@@ -401,11 +399,16 @@ const AppointmentsPage = () => {
         )}
 
         {sortedFiltered.length > 8 && (
-            <div className="flex justify-center mt-4">
-                <button onClick={() => setShowAll((s) => !s)} className={pageStyles.showMoreButton}>
-                    {showAll ? "Show Less" : `Show more (${sortedFiltered.length - 8})`}
-                </button>
-            </div>
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setShowAll((s) => !s)}
+              className={pageStyles.showMoreButton}
+            >
+              {showAll
+                ? "Show Less"
+                : `Show more (${sortedFiltered.length - 8})`}
+            </button>
+          </div>
         )}
       </div>
     </div>

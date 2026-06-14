@@ -453,7 +453,7 @@ export const cancelServiceAppointment = async (req, res) => {
 //to get the statistics
 export const getServiceAppointmentStats = async (req, res) => {
     try {
-        const services = await ServiceAppointment.aggregate([
+        const services = await Service.aggregate([
             {
                 $lookup: { from: "serviceappointments", localField: "_id", foreignField: "serviceId", as: "appointments" },
             },
@@ -483,25 +483,22 @@ export const getServiceAppointmentStats = async (req, res) => {
 //to get appointment for the patient
 export const getServiceAppointmentsByPatient = async (req, res) => {
     try {
-        const clerkUserId = resolveClerkUserId(req);
-        const { createdBy, mobile } = req.query;
-        const resolvedCreatedBy = createdBy || clerkUserId || null;
-        if (!resolvedCreatedBy && !mobile) {
-            return res.json({
-                success: true,
-                data: []
-            })
+        const { userId } = getAuth(req);                              // ✅ getAuth
+        const resolvedCreatedBy = req.query.createdBy || userId || null;
+
+        if (!resolvedCreatedBy && !req.query.mobile) {
+            return res.json({ success: true, appointments: [] });
         }
 
         const filter = {};
-        if (resolvedCreatedBy) filter.createdby = resolvedCreatedBy;
-        if (mobile) filter.mobile = mobile;
+        if (resolvedCreatedBy) filter.createdBy = resolvedCreatedBy; // ✅ createdBy not createdby
+        if (req.query.mobile) filter.mobile = req.query.mobile;
 
-        const list = await ServiceAppointment.find(filter).sort({ createdAt: -1 }).lean();
-        return res.json({
-            success: true,
-            data: list
-        })
+        const list = await ServiceAppointment.find(filter)
+            .sort({ createdAt: -1 })
+            .lean();
+
+        return res.json({ success: true, appointments: list });       // ✅ "appointments" not "data"
     } catch (err) {
         console.error("getServiceAppointmentsByPatient error:", err);
         return res.status(500).json({ success: false, message: "Server error" });

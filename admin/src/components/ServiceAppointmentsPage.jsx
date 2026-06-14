@@ -8,6 +8,8 @@ import {
   Phone,
   SearchIcon,
   XIcon,
+  User,
+  CheckCircle
 } from "lucide-react";
 
 const API_BASE = "http://localhost:4000";

@@ -48,11 +48,7 @@ const VerifyPaymentPage = () => {
         };
 
     }, [location, navigate])
-  return (
-    <div>
-      
-    </div>
-  )
+  return null;
 }
 
 export default VerifyPaymentPage
