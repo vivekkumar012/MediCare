@@ -7,6 +7,7 @@ import doctorRouter from "./routes/doctorRouter.js";
 import serviceRouter from "./routes/serviceRouter.js";
 import appointmentRouter from "./routes/appointmentRouter.js";
 import serviceAppointmentRouter from "./routes/serviceAppointmentRouter.js";
+import mongoose from "mongoose";
 
 const app = express();
 const port = 4000;
@@ -18,8 +19,8 @@ const allowedOrigins = [
     "http://localhost:3001",    // ← Docker admin
     "http://frontend:80",       // ← Docker internal
     "http://admin:80",          // ← Docker internal
-    "https://medicare-admin-six.vercel.app/",
-    "https://medi-care-sage.vercel.app/"
+    "https://medicare-admin-six.vercel.app",
+    "https://medi-care-sage.vercel.app"
 ]
 
 //Middlewares
